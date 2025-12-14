@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Message Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Family Message Generator</h1>
+
+    <!-- Choose Message Type -->
+    <label for="message-type">Choose Message Type:</label>
+    <select id="message-type">
+        <option value="wedding">Wedding</option>
+        <option value="engagement-boy">Engagement (Boy)</option>
+        <option value="engagement-girl">Engagement (Girl)</option>
+        <option value="bar-mitzva">Bar Mitzva</option>
+        <option value="bat-mitzva">Bat Mitzva</option>
+        <option value="baby-boy">Birth of Baby Boy</option>
+        <option value="baby-girl">Birth of Baby Girl</option>
+        <option value="brit">Brit</option>
+        <option value="general">General Message</option>
+    </select>
+
+    <h3>Enter Names (First Person: Savta, Others: Couple/Family)</h3>
+
+    <div class="names">
+        <label for="name-english-2">Name (English):</label>
+        <input type="text" id="name-english-2" placeholder="Name in English" required>
+
+        <label for="name-english-3">Name (English):</label>
+        <input type="text" id="name-english-3" placeholder="Name in English">
+
+        <label for="name-hebrew-2">Name (Hebrew):</label>
+        <input type="text" id="name-hebrew-2" placeholder="שם בעברית" required>
+
+        <label for="name-hebrew-3">Name (Hebrew):</label>
+        <input type="text" id="name-hebrew-3" placeholder="שם בעברית">
+
+        <label>Event image (optional)</label>
+        <input type="file" id="event-image-input" accept="image/*">
+
+        <label>Signature (optional)</label>
+        <input
+                type="text"
+                id="signature-input"
+                value="ובשמחות אצל כולם!!!!"
+                dir="rtl"
+                style="text-align:left;"
+        >
+    </div>
+
+    <!-- Engagement: To whom -->
+    <div id="engagement-fields" style="display:none;">
+        <h3>Engagement – To whom</h3>
+
+        <label>To (English)</label>
+        <input type="text" id="engagement-to-en" placeholder="e.g. To Sarah & David">
+
+        <label>אל (עברית)</label>
+        <input type="text" id="engagement-to-he" placeholder="לדוגמה: אל שרה ודוד">
+    </div>
+
+    <!-- General message custom text -->
+    <div id="general-fields" style="display:none;">
+        <h3>General Message Text</h3>
+
+        <label>Message (English)</label>
+        <textarea id="general-message-en" rows="4"
+                  placeholder="Write your message in English"></textarea>
+
+        <label>הודעה (עברית)</label>
+        <textarea id="general-message-he" rows="4"
+                  placeholder="כתוב הודעה בעברית"></textarea>
+    </div>
+
+    <!-- Button to generate message -->
+    <button id="generate-message">Generate Message</button>
+
+    <!-- Message Preview -->
+    <div id="message-preview">
+        <div id="email-content">
+            <div class="logo">
+                <img src="" alt="Family Logo" id="family-logo">
+            </div>
+
+            <div class="message-container">
+                <div class="message-left">
+                    <p id="english-message"></p>
+                </div>
+                <div class="message-right">
+                    <p id="hebrew-message"></p>
+                </div>
+            </div>
+
+
+            <div class="event-image">
+                <img src="" alt="Event Image" id="message-image">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Button to Copy Message -->
+    <button id="copy-message">Copy to Clipboard</button>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
