@@ -11,6 +11,7 @@ const defaultEventImages = {
     general: BASE_URL + "general.png"
 };
 
+
 const logoURL = BASE_URL + "family-logo.png";
 
 
