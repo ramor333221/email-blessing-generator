@@ -1,23 +1,51 @@
-const BASE_URL = "https://YOUR_USERNAME.github.io/YOUR_REPO/images/";
+document.addEventListener("DOMContentLoaded", function () {
+    let uploadedImageBase64 = null;
+    const BASE_URL =
+        "https://raw.githubusercontent.com/ramor333221/email-blessing-generator/main/images/";
 
-const defaultEventImages = {
-    wedding: BASE_URL + "wedding.png",
-    engagement: BASE_URL + "engagement.png",
-    "baby-boy": BASE_URL + "baby-boy.png",
-    "baby-girl": BASE_URL + "baby-girl.png",
-    "bar-mitzva": BASE_URL + "bar-mitzva.png",
-    "bat-mitzva": BASE_URL + "bat-mitzva.png",
-    brit: BASE_URL + "brit.png",
-    general: BASE_URL + "general.png"
-};
+    const defaultEventImages = {
+        wedding: BASE_URL + "wedding.png",
+        engagement: BASE_URL + "engagement.png",
+        "baby-boy": BASE_URL + "baby-boy.png",
+        "baby-girl": BASE_URL + "baby-girl.png",
+        "bar-mitzva": BASE_URL + "bar-mitzva.png",
+        "bat-mitzva": BASE_URL + "bat-mitzva.png",
+        brit: BASE_URL + "brit.png",
+        general: BASE_URL + "general.png"
+    };
+
+    const logoURL = BASE_URL + "family-logo.png";
+
+    const imageInput = document.getElementById("event-image-input");
+    const imagePreview = document.getElementById("event-image-preview");
+
+    imageInput.addEventListener("change", async function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image file");
+            this.value = "";
+            return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Image is too large (max 2MB)");
+            this.value = "";
+            return;
+        }
+
+        uploadedImageBase64 = await fileToBase64(file);
+
+        imagePreview.src = uploadedImageBase64;
+        imagePreview.style.display = "block";
+    });
 
 
-const logoURL = BASE_URL + "family-logo.png";
 
 
 
-
-document.getElementById("message-type").addEventListener("change", function () {
+    document.getElementById("message-type").addEventListener("change", function () {
     const type = this.value;
 
     document.getElementById("engagement-fields").style.display =
@@ -31,6 +59,23 @@ document.getElementById("message-type").addEventListener("change", function () {
 });
 
 
+imageInput.addEventListener("change", function () {
+    const file = this.files[0];
+
+    if (!file) return;
+
+    // Optional: limit size (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        alert("Image is too large (max 2MB)");
+        this.value = "";
+        imagePreview.style.display = "none";
+        return;
+    }
+
+    const imageURL = URL.createObjectURL(file);
+    imagePreview.src = imageURL;
+    imagePreview.style.display = "block";
+});
 
 document.getElementById("generate-message").addEventListener("click", function () {
     const messageType = document.getElementById("message-type").value;
@@ -70,7 +115,7 @@ document.getElementById("generate-message").addEventListener("click", function (
     }
 
     const wishesEn = messageType === "general" ? "" : "Big Mazal Tov<br>to";
-    const wishesHe = messageType === "general" ? "" : "ברכות מזל טוב<br>לביבים";
+    const wishesHe = messageType === "general" ? "" : "ברכות מזל טוב<br>לביביים";
 
 
     // Titles
@@ -145,14 +190,11 @@ document.getElementById("generate-message").addEventListener("click", function (
     }
 
     // Images (ONLINE – email safe)
-    const logoURL="./images/family-logo.png"
-    let eventImageSrc = defaultEventImages[messageType] || defaultEventImages.general;
+    let eventImageSrc =
+        defaultEventImages[messageType] || defaultEventImages.general;
 
-    const userImageInput = document.getElementById("event-image-input");
-    const userImage = userImageInput.files[0];
-
-    if (userImage) {
-        eventImageSrc = URL.createObjectURL(userImage);
+    if (uploadedImageBase64) {
+        eventImageSrc = uploadedImageBase64;
     }
 
 
@@ -282,3 +324,12 @@ document.getElementById("copy-message").addEventListener("click", function () {
     window.getSelection().removeAllRanges();
     alert("Email content copied!");
 });
+});
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
