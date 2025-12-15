@@ -237,11 +237,18 @@ document.getElementById("generate-message").addEventListener("click", function (
     </td>
 
     <!-- Event Image -->
-    <td width="20%" align="center" valign="middle">
-        <img src="${eventImageSrc}"
-             width="260"
-             style="display:block;margin:0 auto;">
-    </td>
+   <td width="30%" align="center" valign="middle">
+    <img
+        src="${eventImageSrc}"
+        style="
+            display:block;
+            width:100%;
+            max-width:100%;
+            height:auto;
+            margin:0 auto;
+        "
+    >
+</td>
 
     <!-- Hebrew -->
     <td width="40%" valign="top">

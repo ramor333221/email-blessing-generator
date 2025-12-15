@@ -34,6 +34,10 @@ label {
     font-weight: bold;
     color: #333;
 }
+.names{
+    width: 98%;
+}
+
 
 input,
 select {
@@ -136,7 +140,7 @@ label {
 
 /* Signature text input */
 #signature-input {
-    width: 100%;
+    width: 98%;
     padding: 12px 14px;
     font-size: 16px;
     border-radius: 10px;

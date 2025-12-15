@@ -24,9 +24,8 @@
         <option value="general">General Message</option>
     </select>
 
-    <h3>Enter Names (First Person: Savta, Others: Couple/Family)</h3>
-
     <div class="names">
+        <h3>Enter Names (First Person: Savta, Others: Couple/Family)</h3>
         <label for="name-english-2">Name (English):</label>
         <input type="text" id="name-english-2" placeholder="Name in English" required>
 
@@ -39,30 +38,29 @@
         <label for="name-hebrew-3">Name (Hebrew):</label>
         <input type="text" id="name-hebrew-3" placeholder="שם בעברית">
 
-        <input type="file" id="event-image-input" hidden>
-        <label for="event-image-input" class="file-btn">
-            Choose Image
-        </label>
-
-        <label>Signature (optional)</label>
-        <input
-                type="text"
-                id="signature-input"
-                value="ובשמחות אצל כולם!!!!"
-                dir="rtl"
-                style="text-align:left;"
-        >
     </div>
+    <label>Signature (optional)</label>
+    <input
+            type="text"
+            id="signature-input"
+            value="ובשמחות אצל כולם!!!!"
+            dir="rtl"
+            style="text-align:left;"
+    >
+    <input type="file" id="event-image-input" hidden>
+    <label for="event-image-input" class="file-btn">
+        Choose Image
+    </label>
 
     <!-- Engagement: To whom -->
     <div id="engagement-fields" style="display:none;">
         <h3>Engagement – To whom</h3>
 
-        <label>To (English)</label>
-        <input type="text" id="engagement-to-en" placeholder="e.g. To Sarah & David">
+        <label>With (English)</label>
+        <input type="text" id="engagement-to-en" placeholder="with...">
 
-        <label>אל (עברית)</label>
-        <input type="text" id="engagement-to-he" placeholder="לדוגמה: אל שרה ודוד">
+        <label>עם (עברית)</label>
+        <input type="text" id="engagement-to-he" placeholder="עם...">
     </div>
 
     <!-- General message custom text -->
