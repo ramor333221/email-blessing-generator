@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     let uploadedImageBase64 = null;
+    let secondUploadedImageBase64 = null;
+    const signature = document.getElementById("signature-input").value.trim();
     const BASE_URL =
         "https://raw.githubusercontent.com/ramor333221/email-blessing-generator/main/images/";
 
     const defaultEventImages = {
         wedding: BASE_URL + "wedding.png",
-        engagement: BASE_URL + "engagement.png",
+        "engagement-boy": BASE_URL + "engagement.png",
+        "engagement-girl": BASE_URL + "engagement.png",
         "baby-boy": BASE_URL + "baby-boy.png",
         "baby-girl": BASE_URL + "baby-girl.png",
         "bar-mitzva": BASE_URL + "bar-mitzva.png",
@@ -19,319 +22,342 @@ document.addEventListener("DOMContentLoaded", function () {
     const imageInput = document.getElementById("event-image-input");
     const imagePreview = document.getElementById("event-image-preview");
 
-    imageInput.addEventListener("change", async function () {
-        const file = this.files[0];
-        if (!file) return;
+    const imageInput1 = document.getElementById("event-image-input");
+    const imageInput2 = document.getElementById("event-image-input-2");
+
+    imageInput1.addEventListener("change", async function () {
+        uploadedImageBase64 = await handleImageUpload(this);
+    });
+
+    imageInput2.addEventListener("change", async function () {
+        secondUploadedImageBase64 = await handleImageUpload(this);
+    });
+
+    async function handleImageUpload(input) {
+        const file = input.files[0];
+        if (!file) return null;
 
         if (!file.type.startsWith("image/")) {
             alert("Please select an image file");
-            this.value = "";
-            return;
+            input.value = "";
+            return null;
         }
 
         if (file.size > 2 * 1024 * 1024) {
             alert("Image is too large (max 2MB)");
-            this.value = "";
-            return;
+            input.value = "";
+            return null;
         }
 
-        uploadedImageBase64 = await fileToBase64(file);
-
-        imagePreview.src = uploadedImageBase64;
-        imagePreview.style.display = "block";
-    });
-
-
+        return await fileToBase64(file);
+    }
 
 
 
     document.getElementById("message-type").addEventListener("change", function () {
-    const type = this.value;
+        const type = this.value;
 
-    document.getElementById("engagement-fields").style.display =
-        type.startsWith("engagement") ? "block" : "none";
+        document.getElementById("engagement-fields").style.display =
+            type.startsWith("engagement") ? "block" : "none";
 
-    document.getElementById("general-fields").style.display =
-        type === "general" ? "block" : "none";
+        document.getElementById("general-fields").style.display =
+            type === "general" ? "block" : "none";
 
-    document.querySelector(".names").style.display =
-        type === "general" ? "none" : "block";
-});
-
-
-imageInput.addEventListener("change", function () {
-    const file = this.files[0];
-
-    if (!file) return;
-
-    // Optional: limit size (2MB)
-    if (file.size > 2 * 1024 * 1024) {
-        alert("Image is too large (max 2MB)");
-        this.value = "";
-        imagePreview.style.display = "none";
-        return;
-    }
-
-    const imageURL = URL.createObjectURL(file);
-    imagePreview.src = imageURL;
-    imagePreview.style.display = "block";
-});
-
-document.getElementById("generate-message").addEventListener("click", function () {
-    const messageType = document.getElementById("message-type").value;
-    const engagementToEn =
-        document.getElementById("engagement-to-en")?.value.trim() || "";
-
-    const engagementToHe =
-        document.getElementById("engagement-to-he")?.value.trim() || "";
-
-    const generalMessageEn =
-        document.getElementById("general-message-en")?.value.trim() || "";
-
-    const generalMessageHe =
-        document.getElementById("general-message-he")?.value.trim() || "";
-
-    // Fixed sender
-    const senderEn = "Savta";
-    const senderHe = "לסבתא";
-
-    // User input
-    const en1 = document.getElementById("name-english-2").value;
-    const en2 = document.getElementById("name-english-3").value;
-    const he1 = "ל"+document.getElementById("name-hebrew-2").value;
-    const he2 = "ל"+document.getElementById("name-hebrew-3").value;
-
-    let englishNames = "";
-    let hebrewNames = "";
-
-    if (messageType !== "general") {
-        englishNames = [senderEn, en1, en2].filter(Boolean)
-            .map(name => `<div style="margin:6px 0;">${name}</div>`)
-            .join("");
-
-        hebrewNames = [senderHe, he1, he2].filter(Boolean)
-            .map(name => `<div style="margin:6px 0;">${name}</div>`)
-            .join("");
-    }
-
-    const wishesEn = messageType === "general" ? "" : "Big Mazal Tov<br>to";
-    const wishesHe = messageType === "general" ? "" : "ברכות מזל טוב<br>לביביים";
+        document.querySelector(".names").style.display =
+            type === "general" ? "none" : "block";
+    });
 
 
-    // Titles
-    let titleEn = "";
-    let titleHe = "";
+    document.getElementById("generate-message").addEventListener("click", function () {
+        const congratsText = document.getElementById("congrats-input")?.value.trim() || "";
+        const messageType = document.getElementById("message-type").value;
+        const engagementToEn =
+            document.getElementById("engagement-to-en")?.value.trim() || "";
 
-    switch (messageType) {
-        case "wedding":
-            titleEn = "for the wedding";
-            titleHe = "לרגל נישואיכם";
-            break;
+        const engagementToHe =
+            document.getElementById("engagement-to-he")?.value.trim() || "";
 
-        case "bar-mitzva":
-            titleEn = "for the Bar Mitzva";
-            titleHe = "לרגל הכנסו לעול תורה ומצוות";
-            break;
+        const generalMessageEn =
+            document.getElementById("general-message-en")?.value.trim() || "";
 
-        case "bat-mitzva":
-            titleEn = "for he Bat Mitzva";
-            titleHe = "לרגל הכנסה לעול תורה ומצוות";
-            break;
+        const generalMessageHe =
+            document.getElementById("general-message-he")?.value.trim() || "";
 
-        case "baby-boy":
-            titleEn = "on the safe arrival of a baby boy";
-            titleHe = "להולדת הבן בשעה טובה ומוצלחת";
-            break;
+        // Fixed sender
+        const senderEn = "Savta";
+        const senderHe = "לסבתא";
 
-        case "baby-girl":
-            titleEn = "on the safe arrival of a baby girl";
-            titleHe = "להולדת הבת בשעה טובה ומוצלחת";
-            break;
+        // User input
+        const en1 = document.getElementById("name-english-2").value;
+        const en2 = document.getElementById("name-english-3").value;
+        const he1 = "ל" + document.getElementById("name-hebrew-2").value;
+        const he2 = "ל" + document.getElementById("name-hebrew-3").value;
 
-        case "brit":
-            titleEn = "Mazal Tov on this joyful occasion";
-            titleHe = "להכנסת בנו בבריתו של אברהם אבינו";
-            break;
+        let englishNames = "";
+        let hebrewNames = "";
 
-        case "engagement-boy":
-            titleEn = "on your engagement";
-            titleHe = "לרגל אירוסיו";
-            break;
+        if (messageType !== "general") {
+            englishNames = [senderEn, en1, en2].filter(Boolean)
+                .map(name => `<div style="margin:6px 0;">${name}</div>`)
+                .join("");
 
-        case "engagement-girl":
-            titleEn = "on your engagement";
-            titleHe = "לרגל אירוסיה";
-            break;
+            hebrewNames = [senderHe, he1, he2].filter(Boolean)
+                .map(name => `<div style="margin:6px 0;">${name}</div>`)
+                .join("");
+        }
 
-        case "general":
-            titleEn = generalMessageEn || "Have a nice day";
-            titleHe = generalMessageHe || "יום נעים";
-            break;
-    }
-    let engagementToBlockEn = "";
-    let engagementToBlockHe = "";
+        const wishesEn = messageType === "general" ? "" : "Big Mazal Tov<br>to";
+        const wishesHe = messageType === "general" ? "" : "ברכות מזל טוב<br>לבביים";
 
-    if (messageType.startsWith("engagement")) {
-        if (engagementToEn) {
-            engagementToBlockEn = `
-            <div style="font-size:17px;font-weight:bold;margin-top:8px;color:#555;">
+
+        // Titles
+        let titleEn = "";
+        let titleHe = "";
+
+        switch (messageType) {
+            case "wedding":
+                titleEn = "for the wedding";
+                titleHe = "לרגל נישואיכם";
+                break;
+
+            case "bar-mitzva":
+                titleEn = "for the Bar Mitzva";
+                titleHe = "לרגל הכנסו לעול תורה ומצוות";
+                break;
+
+            case "bat-mitzva":
+                titleEn = "for he Bat Mitzva";
+                titleHe = "לרגל הכנסה לעול תורה ומצוות";
+                break;
+
+            case "baby-boy":
+                titleEn = "on the safe arrival of a baby boy";
+                titleHe = "להולדת הבן בשעה טובה ומוצלחת";
+                break;
+
+            case "baby-girl":
+                titleEn = "on the safe arrival of a baby girl";
+                titleHe = "להולדת הבת בשעה טובה ומוצלחת";
+                break;
+
+            case "brit":
+                titleEn = "Mazal Tov on this joyful occasion";
+                titleHe = "להכנסת בנו בבריתו של אברהם אבינו";
+                break;
+
+            case "engagement-boy":
+                titleEn = "on your engagement";
+                titleHe = "לרגל אירוסיו";
+                break;
+
+            case "engagement-girl":
+                titleEn = "on your engagement";
+                titleHe = "לרגל אירוסיה";
+                break;
+
+            case "general":
+                titleEn = generalMessageEn || "Have a nice day";
+                titleHe = generalMessageHe || "יום נעים";
+                break;
+        }
+        let engagementToBlockEn = "";
+        let engagementToBlockHe = "";
+
+        if (messageType.startsWith("engagement")) {
+            if (engagementToEn) {
+                engagementToBlockEn = `
+            <div style="font-size:30px;font-weight:bold;margin-top:8px;color:#555;">
                 with<br>${engagementToEn}
             </div>
         `;
-        }
+            }
 
-        if (engagementToHe) {
-            engagementToBlockHe = `
-            <div style="font-size:17px;font-weight:bold;margin-top:8px;color:#555;">
+            if (engagementToHe) {
+                engagementToBlockHe = `
+            <div style="font-size:30px;font-weight:bold;margin-top:8px;color:#555;">
                עם<br> ${engagementToHe}
             </div>
         `;
+            }
         }
-    }
 
-    // Images (ONLINE – email safe)
-    let eventImageSrc =
-        defaultEventImages[messageType] || defaultEventImages.general;
+        // Images (ONLINE – email safe)
+        let eventImagesHTML = "";
 
-    if (uploadedImageBase64) {
-        eventImageSrc = uploadedImageBase64;
-    }
+        const images = [];
+
+// priority: user images
+        if (uploadedImageBase64) images.push(uploadedImageBase64);
+        if (secondUploadedImageBase64) images.push(secondUploadedImageBase64);
+
+// fallback: default
+        if (images.length === 0) {
+            images.push(defaultEventImages[messageType] || defaultEventImages.general);
+        }
+
+// build HTML
+        eventImagesHTML = images.map(img => `
+    <img src="${img}" style="
+        display:block;
+        width:100%;
+        max-width:180px;
+        height:auto;
+        margin:8px auto;
+    ">
+`).join("");
 
 
 
-
-    const signature =
-        document.getElementById("signature-input").value.trim();
-
-    // EMAIL-SAFE HTML (TABLE BASED)
-    const emailHTML = `
+        const emailHTML = `
 <table width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;text-align:center;">
    
    <tr>
     <!-- English -->
     <td width="40%" valign="top">
-        <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-                <div style="
-    min-height:260px;
-    display:block;
-">
-    ${wishesEn ? `
-<div style="font-size:26px;font-weight:bold;margin-bottom:6px;">
-    ${wishesEn}
-</div>
-` : ""}
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td style="min-height:260px;">
+        ${wishesEn ? `
+        <div style="font-family:'Comic Sans MS',Arial;
+                    font-size:34px;font-weight:bold;">
+            ${wishesEn}
+        </div>` : ""}
 
-    <div style="margin-bottom:8px;">
-        ${englishNames}
-    </div>
+        <div style="font-family:'Comic Sans MS',Arial;
+                    font-size:34px;font-weight:bold;">
+            ${englishNames}
+        </div>
 
-    <div style="margin-top:10px;">
-        ${titleEn}
-    </div>
+        <div style="font-family:'Comic Sans MS',Arial;
+                    font-size:34px;font-weight:bold;">
+            ${titleEn}
+        </div>
+
         ${engagementToBlockEn || ""}
-</div>
+      </td>
+    </tr>
+  </table>
+</td>
 
-            </tr>
-        </table>
-    </td>
 
     <!-- Event Image -->
    <td width="30%" align="center" valign="middle">
-    <img
-        src="${eventImageSrc}"
-        style="
-            display:block;
-            width:100%;
-            max-width:100%;
-            height:auto;
-            margin:0 auto;
-        "
-    >
+    ${eventImagesHTML}
 </td>
 
     <!-- Hebrew -->
-    <td width="40%" valign="top">
-        <table width="100%" cellpadding="0" cellspacing="0" dir="rtl">
-            <tr>
-                <div style="
-    min-height:260px;
-    display:block;
-">
-    ${wishesHe ? `
-<div style="font-size:26px;font-weight:bold;margin-bottom:6px;">
-    ${wishesHe}
-</div>
-` : ""}
+    <td width="40%" valign="top" dir="rtl">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td style="min-height:260px;">
+        ${wishesHe ? `
+        <div style="font-family:'Comic Sans MS',Arial;
+                    font-size:34px;font-weight:bold;">
+            ${wishesHe}
+        </div>` : ""}
 
-    <div style="margin-bottom:8px;">
-        ${hebrewNames}
-    </div>
+        <div style="font-family:'Comic Sans MS',Arial;
+                    font-size:34px;font-weight:bold;">
+            ${hebrewNames}
+        </div>
 
-    <div style="margin-top:10px;">
-        ${titleHe}
-    </div>
-     ${engagementToBlockHe || ""}
-</div>
+        <div style="font-family:'Comic Sans MS',Arial;
+                    font-size:34px;font-weight:bold;">
+            ${titleHe}
+        </div>
 
-            </tr>
-        </table>
-    </td>
-</tr>
-
-
-
-
-
-
-    ${signature || logoURL ? `
-<tr>
-    <!-- Signature -->
-   <td width="40%" style="
-    padding-top:20px;
-    padding-left:20px;
-    padding-right:10px;
-    font-size:21px;
-    font-weight:bold;
-    color:#cc0000;
-    text-align:center;
-    vertical-align:middle;
-    direction: rtl;
-">
-    ${signature || ""}
+        ${engagementToBlockHe || ""}
+      </td>
+    </tr>
+  </table>
 </td>
 
-    <!-- Empty spacer -->
-    <td width="10%"></td>
+</tr>
+${congratsText ? `
+<tr>
+  <td colspan="3" style="
+      font-size:40px;
+      font-weight:bold;
+      color:#d40000;
+      padding-top:12px;
+      text-align:center;
+  ">
+    ${congratsText}
+  </td>
+</tr>` : ""}
 
-    <!-- Logo -->
-    <td width="40%" style="
-        padding-top:20px;
-        padding-right:20px;
-        text-align:right;
-        vertical-align:middle;
-    ">
-        <img src="${logoURL}" width="80" style="display:inline-block;">
-    </td>
+
+
+
+
+
+  ${(signature || logoURL) ? `
+
+<tr>
+  <td colspan="3" height="40"></td>
+</tr>
+
+<tr>
+  <td width="40%" valign="bottom" style="
+      padding-left:8px;
+      font-size:22px;
+      font-weight:bold;
+      color:#cc0000;
+      text-align:left;
+      direction:rtl;
+  ">
+      ${signature}
+  </td>
+
+  <td width="20%"></td>
+
+  <td width="40%" valign="bottom" style="text-align:-webkit-right;padding-right:8px;direction:ltr;">
+      <img src="${logoURL}" width="80">
+  </td>
 </tr>
 ` : ""}
+<tr>
+  <td colspan="3" style="
+      padding-top:18px;
+      font-size:14px;
+      font-weight:normal;
+      color:#666;
+      text-align:center;
+  ">
+      AMOR FAMILY HOTLINE – KEEPING US ALL IN TOUCH<br>
+      ONLINE - BEYOND TIME<br>
+      משפחת אמור - משהו מיוחד
+  </td>
+</tr>
 
 </table>
 `;
-    document.getElementById("email-content").innerHTML = emailHTML;
-});
+        document.getElementById("email-content").innerHTML = emailHTML;
+    });
 
 // Copy for email
-document.getElementById("copy-message").addEventListener("click", function () {
-    const range = document.createRange();
-    range.selectNode(document.getElementById("email-content"));
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand("copy");
-    window.getSelection().removeAllRanges();
-    alert("Email content copied!");
+    document.getElementById("copy-message").addEventListener("click", function () {
+        const content = document.getElementById("email-content");
+
+        const range = document.createRange();
+        range.selectNode(content);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+
+        const status = document.getElementById("copy-status");
+        status.style.display = "block";
+
+        // auto-hide after 2 seconds
+        setTimeout(() => {
+            status.style.display = "none";
+        }, 2000);
+    });
+
 });
-});
+
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();

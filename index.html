@@ -38,6 +38,15 @@
         <label for="name-hebrew-3">Name (Hebrew):</label>
         <input type="text" id="name-hebrew-3" placeholder="שם בעברית">
 
+        <!-- Congratulations text (optional) -->
+        <div class="congrats">
+            <label for="congrats-input">Congratulations Text (optional)</label>
+            <input
+                    id="congrats-input"
+                    rows="2"
+                    placeholder="add Congratulations..."
+            ></input>
+        </div>
     </div>
     <label>Signature (optional)</label>
     <input
@@ -47,9 +56,16 @@
             dir="rtl"
             style="text-align:left;"
     >
+
     <input type="file" id="event-image-input" hidden>
+    <input type="file" id="event-image-input-2" hidden>
+
     <label for="event-image-input" class="file-btn">
-        Choose Image
+        Choose Image 1
+    </label>
+
+    <label for="event-image-input-2" class="file-btn">
+        Choose Image 2 (optional)
     </label>
 
     <!-- Engagement: To whom -->
@@ -105,6 +121,15 @@
 
     <!-- Button to Copy Message -->
     <button id="copy-message">Copy to Clipboard</button>
+    <div id="copy-status" style="
+    margin-top:8px;
+    font-size:14px;
+    color:green;
+    display:none;
+">
+        Message copied ✔
+    </div>
+
 </div>
 
 <script src="js/script.js"></script>
