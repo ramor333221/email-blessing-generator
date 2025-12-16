@@ -90,8 +90,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // User input
         const en1 = document.getElementById("name-english-2").value;
         const en2 = document.getElementById("name-english-3").value;
-        const he1 = "ל" + document.getElementById("name-hebrew-2").value;
-        const he2 = "ל" + document.getElementById("name-hebrew-3").value;
+        const he1Input = document.getElementById("name-hebrew-2").value.trim();
+        const he2Input = document.getElementById("name-hebrew-3").value.trim();
+
+        const he1 = he1Input ? "ל" + he1Input : "";
+        const he2 = he2Input ? "ל" + he2Input : "";
+
 
         let englishNames = "";
         let hebrewNames = "";
