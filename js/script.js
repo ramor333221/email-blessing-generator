@@ -43,12 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return null;
         }
 
-        if (file.size > 2 * 1024 * 1024) {
-            alert("Image is too large (max 2MB)");
-            input.value = "";
-            return null;
-        }
-
         return await fileToBase64(file);
     }
 
@@ -329,7 +323,6 @@ ${congratsText ? `
       text-align:center;
   ">
       AMOR FAMILY HOTLINE – KEEPING US ALL IN TOUCH<br>
-      ONLINE - BEYOND TIME<br>
       משפחת אמור - משהו מיוחד
   </td>
 </tr>
