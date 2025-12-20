@@ -14,8 +14,7 @@
     <label for="message-type">Choose Message Type:</label>
     <select id="message-type">
         <option value="wedding">Wedding</option>
-        <option value="engagement-boy">Engagement (Boy)</option>
-        <option value="engagement-girl">Engagement (Girl)</option>
+        <option value="engagement">Engagement</option>
         <option value="bar-mitzva">Bar Mitzva</option>
         <option value="bat-mitzva">Bat Mitzva</option>
         <option value="baby-boy">Birth of Baby Boy</option>
@@ -70,13 +69,22 @@
 
     <!-- Engagement: To whom -->
     <div id="engagement-fields" style="display:none;">
-        <h3>Engagement – To whom</h3>
 
-        <label>With (English)</label>
-        <input type="text" id="engagement-to-en" placeholder="with...">
+        <h3>Engagement – groom</h3>
 
-        <label>עם (עברית)</label>
-        <input type="text" id="engagement-to-he" placeholder="עם...">
+        <label>groom</label>
+        <input type="text" id="engagement-a-en" placeholder="groom...">
+
+        <label>חתן</label>
+        <input type="text" id="engagement-a-he" placeholder="חתן...">
+
+        <h3>Engagement – bride</h3>
+
+        <label>bride</label>
+        <input type="text" id="engagement-b-en" placeholder="bride...">
+
+        <label>כלה</label>
+        <input type="text" id="engagement-b-he" placeholder="כלה...">
     </div>
 
     <!-- General message custom text -->

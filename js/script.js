@@ -1,14 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
     let uploadedImageBase64 = null;
     let secondUploadedImageBase64 = null;
-    const signature = document.getElementById("signature-input").value.trim();
     const BASE_URL =
         "https://raw.githubusercontent.com/ramor333221/email-blessing-generator/main/images/";
 
     const defaultEventImages = {
         wedding: BASE_URL + "wedding.png",
-        "engagement-boy": BASE_URL + "engagement.png",
-        "engagement-girl": BASE_URL + "engagement.png",
+        "engagement": BASE_URL + "engagement.png",
         "baby-boy": BASE_URL + "baby-boy.png",
         "baby-girl": BASE_URL + "baby-girl.png",
         "bar-mitzva": BASE_URL + "bar-mitzva.png",
@@ -63,16 +61,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     document.getElementById("generate-message").addEventListener("click", function () {
+        const signature = document.getElementById("signature-input").value.trim();
         const congratsText = document.getElementById("congrats-input")?.value.trim() || "";
         const messageType = document.getElementById("message-type").value;
-        const engagementToEn =
-            document.getElementById("engagement-to-en")?.value.trim() || "";
+        const engagementAEn =
+            document.getElementById("engagement-a-en")?.value.trim() || "";
 
-        const engagementToHe =
-            document.getElementById("engagement-to-he")?.value.trim() || "";
+        const engagementAHe =
+            document.getElementById("engagement-a-he")?.value.trim() || "";
+
+        const engagementBEn =
+            document.getElementById("engagement-b-en")?.value.trim() || "";
+
+        const engagementBHe =
+            document.getElementById("engagement-b-he")?.value.trim() || "";
 
         const generalMessageEn =
             document.getElementById("general-message-en")?.value.trim() || "";
+
+
 
         const generalMessageHe =
             document.getElementById("general-message-he")?.value.trim() || "";
@@ -143,14 +150,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 titleHe = "להכנסת בנו בבריתו של אברהם אבינו";
                 break;
 
-            case "engagement-boy":
-                titleEn = "on your engagement";
-                titleHe = "לרגל אירוסיו";
-                break;
-
-            case "engagement-girl":
-                titleEn = "on your engagement";
-                titleHe = "לרגל אירוסיה";
+            case "engagement":
+                titleEn = "for the engagement of";
+                titleHe = "לאירוסי";
                 break;
 
             case "general":
@@ -162,18 +164,21 @@ document.addEventListener("DOMContentLoaded", function () {
         let engagementToBlockHe = "";
 
         if (messageType.startsWith("engagement")) {
-            if (engagementToEn) {
+            if (engagementAEn) {
                 engagementToBlockEn = `
             <div style="font-size:30px;font-weight:bold;margin-top:8px;color:#555;">
-                with<br>${engagementToEn}
+            ${engagementAEn}<br>
+                with<br>
+            ${engagementBEn}
             </div>
         `;
             }
 
-            if (engagementToHe) {
+            if (engagementAHe) {
                 engagementToBlockHe = `
             <div style="font-size:30px;font-weight:bold;margin-top:8px;color:#555;">
-               עם<br> ${engagementToHe}
+            ${engagementAHe}<br>
+               עם<br> ${engagementBHe}
             </div>
         `;
             }
@@ -211,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
    
    <tr>
     <!-- English -->
-    <td width="40%" valign="top">
+    <td width="35%" valign="top">
   <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
       <td style="min-height:260px;">
@@ -244,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </td>
 
     <!-- Hebrew -->
-    <td width="40%" valign="top" dir="rtl">
+    <td width="35%" valign="top" dir="rtl">
   <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
       <td style="min-height:260px;">
@@ -296,7 +301,7 @@ ${congratsText ? `
 </tr>
 
 <tr>
-  <td width="40%" valign="bottom" style="
+  <td width="35%" valign="bottom" style="
       padding-left:8px;
       font-size:22px;
       font-weight:bold;
@@ -310,7 +315,7 @@ ${congratsText ? `
   <td width="20%"></td>
 
   <td width="40%" valign="bottom" style="text-align:-webkit-right;padding-right:8px;direction:ltr;">
-      <img src="${logoURL}" width="80">
+      <img src="${logoURL}" width="120px">
   </td>
 </tr>
 ` : ""}
